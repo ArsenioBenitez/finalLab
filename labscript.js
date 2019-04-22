@@ -16,6 +16,59 @@ var drawChart = function(data)
 
 // get correlation matrix
 
+  //calculator
+  var getCorr = function(x,y)
+  {
+    var xHw = [];
+    var yHw = [];
+    var getHWgrades = x.forEach(function(d,i){
+      xHw.push(d.grade);
+      yHw.push(y[i].grade);
+    })
+    console.log(x,y);
+  //get mean for x
+    var sumX = x.reduce(function(sum,d)
+    {//get sum of all of X's hw grades
+      return sum+d.grade;
+    }, 0)
+    console.log('sum',sumX);
+    var mx = sumX/x.length;
+  //get mean for y
+    var sumY = y.reduce(function(sum,d)
+    {//get sum of all of X's hw grades
+      return sum+d.grade;
+    }, 0)
+    var my = sumY/y.length;
+    console.log('my',my)
+    var constant = (1/x.length-1);
+    //console.log('constant',constant);
+    var sigma = x.reduce(function(sum,d,i)
+    {
+      var top = (d.grade-mx)*(y[i].grade-my);
+    //  console.log("top",top);
+      return sum+top;
+    },0)
+
+    var bottom = d3.deviation(xHw)*(d3.deviation(yHw));
+    console.log('bottom',bottom);
+    var topBottom = sigma/bottom;
+    console.log('sigma',sigma);
+    var corr = constant*topBottom;
+    console.log('corr',corr);
+    return corr;
+  }
+  var matrix = [];///keeps all our data for the diagram
+  data.forEach(function(s,i)
+  {
+    var row = [];
+    data.forEach(function(eS,j){
+      var c = getCorr(s.homework,eS.homework);
+      console.log(c);
+      row.push(c);
+    })
+    matrix.push(row);
+  })
+  console.log(matrix)
 // data.forEach(function(d,i)
 // {
 //   var corr = []
@@ -55,7 +108,7 @@ var svg = d3.select('svg')
 
 var xScale=d3.scaleLinear()
             .domain([0,23])
-                     //.domain([0,d3.max(hw, function(d){return d.day;})])
+            //.rangeBands([0,width]);
             .range([0, width]);
 var yScale=d3.scaleLinear()
             .domain([0,23])
@@ -67,24 +120,31 @@ var plotLand = svg.append('g')
                 .attr("transform","translate("+margins.left+","+margins.top+")");
 var stu = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]
 
-plotLand.selectAll('rect')
-        .data(data)
+plotLand.selectAll('.row')
+        .data(matrix)
         .enter()
-        .append('rect')
-        .attr('x',function(d,i)
-      {
-        return xScale(i);
-      })
-      .attr('y',function(d,i)
-      {
-        return  stu.forEach(function(j)
-        {return yScale(j);})
-      })
-      .attr('width',function(d,i)
-      {
-        return xScale(i);})
-      .attr('height',function(d,i)
-      {return height - yScale(i)});
+        .append('g')
+        .attr('class',"row")
+        .attr("transform", function(d, i) { return "translate(" + xScale(i) + ", 0)"; });
+
+// .selectAll('rect')
+//         .data(matrix)
+//         .enter()
+//         .append('rect')
+//         .attr('x',function(d,i)
+//       {
+//         return xScale(i);
+//       })
+//       .attr('y',function(d,i)
+//       {
+//         return  stu.forEach(function(j)
+//         {return yScale(j);})
+//       })
+//       .attr('width',function(d,i)
+//       {
+//         return xScale(i);})
+//       .attr('height',function(d,i)
+//       {return height - yScale(i)});
 //setup your axi
  var xA = margins.top+height+20;
  var xAxis = d3.axisBottom(xScale)

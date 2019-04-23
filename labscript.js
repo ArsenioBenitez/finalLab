@@ -40,7 +40,7 @@ var drawChart = function(data)
     }, 0)
     var my = sumY/y.length;
     console.log('my',my)
-    var constant = (1/x.length-1);
+    var constant = (1/(x.length-1));
     //console.log('constant',constant);
     var sigma = x.reduce(function(sum,d,i)
     {
@@ -50,9 +50,9 @@ var drawChart = function(data)
     },0)
 
     var bottom = d3.deviation(xHw)*(d3.deviation(yHw));
-    console.log('bottom',bottom);
+    //console.log('bottom',bottom);
     var topBottom = sigma/bottom;
-    console.log('sigma',sigma);
+    //console.log('sigma',sigma);
     var corr = constant*topBottom;
     console.log('corr',corr);
     return corr;

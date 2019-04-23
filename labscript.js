@@ -69,22 +69,7 @@ var drawChart = function(data)
     matrix.push(row);
   })
   console.log(matrix)
-// data.forEach(function(d,i)
-// {
-//   var corr = []
-//   d.forEach(function(e)
-//   {
-//   var sum = function(d.homework)
-//   {
-//     return d.homework.reduce(function(total,d)
-//   {
-//     return d+total;
-//   },0)
-//   }
-//   var mean = sum/d.homework.length;
-//
-//   })
-// })
+//make grid
 var screen =
 {
   width: 1200,
@@ -100,52 +85,83 @@ var margins =
 }
 var width = screen.width-margins.left-margins.right;
 var height = screen.height-margins.top-margins.bottom;
-
-var svg = d3.select('svg')
-          .attr('width',screen.width)
-          .attr('height',screen.height);
-//setup scales
-
+var sq_width = width/data.length;
+var sq_height = height/data.length;
 var xScale=d3.scaleLinear()
             .domain([0,23])
             //.rangeBands([0,width]);
             .range([0, width]);
+//setup scales
 var yScale=d3.scaleLinear()
             .domain([0,23])
             .range([height,0]);
+var svg = d3.select('svg')
+          .attr('width',screen.width)
+          .attr('height',screen.height);
+
+
+
 var plotLand = svg.append('g')
                 .classed("plot",true)
                 .attr('width',width)
                 .attr('height',height)
                 .attr("transform","translate("+margins.left+","+margins.top+")");
-var stu = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]
 
-plotLand.selectAll('.row')
+var y_s = []
+var row = plotLand.selectAll('.row')
         .data(matrix)
         .enter()
         .append('g')
         .attr('class',"row")
-        .attr("transform", function(d, i) { return "translate(" + xScale(i) + ", 0)"; });
 
-// .selectAll('rect')
-//         .data(matrix)
-//         .enter()
-//         .append('rect')
-//         .attr('x',function(d,i)
-//       {
-//         return xScale(i);
-//       })
-//       .attr('y',function(d,i)
-//       {
-//         return  stu.forEach(function(j)
-//         {return yScale(j);})
-//       })
-//       .attr('width',function(d,i)
-//       {
-//         return xScale(i);})
-//       .attr('height',function(d,i)
-//       {return height - yScale(i)});
-//setup your axi
+var getCols = function(matrix)
+              {
+                var cols=[]
+              matrix.forEach(function(d,i)
+              {
+                d.forEach(function(dd,j)
+              {
+                var pos = {
+                  x :i,
+                  y : j
+                }
+                cols.push(pos)
+              })
+            })
+            return cols
+              }
+columns = getCols(matrix);
+var column = row.selectAll('rect')
+          .data(columns)
+          .enter()
+          .append('rect')
+          .attr("x", function(d)
+          {
+            return xScale(d.x);
+          })
+          .attr('y',function(d)
+          {
+            return yScale(d.y+1);
+          })
+          .attr("width", sq_width)
+          .attr("height", sq_height )
+          .attr('fill',function(d)
+          {
+          if(matrix[d.x][d.y]< -1||matrix[d.x][d.y]>1)
+          {
+          return 'grey'
+          }
+          else if(matrix[d.x][d.y]> -1&&matrix[d.x][d.y]< .6)
+          {
+          return 'green'
+          }
+          else if(matrix[d.x][d.y]> .6 &&matrix[d.x][d.y]< 1)
+          {
+          return 'blue'
+          }
+
+          })
+
  var xA = margins.top+height+20;
  var xAxis = d3.axisBottom(xScale)
  xAxis.ticks([23]);

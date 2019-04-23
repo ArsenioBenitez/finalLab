@@ -62,7 +62,7 @@ var drawChart = function(data)
   {
     var row = [];
     data.forEach(function(eS,j){
-      var c = getCorr(s.homework,eS.homework);
+      var c = getCorr(s.quizes,eS.quizes);
       console.log(c);
       row.push(c);
     })

@@ -146,6 +146,7 @@ var column = row.selectAll('rect')
           })
           .attr("width", sq_width)
           .attr("height", sq_height )
+          .attr('stroke','black')
           .attr('fill',function(d)
           {
           if(matrix[d.x][d.y]< -1||matrix[d.x][d.y]>1)
@@ -156,11 +157,11 @@ var column = row.selectAll('rect')
           {
             return 'yellow'
           }
-          else if(matrix[d.x][d.y]> -1&&matrix[d.x][d.y]< .6)
+          else if(matrix[d.x][d.y]>= -1&&matrix[d.x][d.y]<= .6)
           {
           return 'green'
           }
-          else if(matrix[d.x][d.y]> .6 &&matrix[d.x][d.y]< 1)
+          else if(matrix[d.x][d.y]>= .6 &&matrix[d.x][d.y]<= 1)
           {
           return 'blue'
           }

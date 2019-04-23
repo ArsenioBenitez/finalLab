@@ -72,13 +72,13 @@ var drawChart = function(data)
 //make grid
 var screen =
 {
-  width: 1200,
-  height: 1200
+  width: 800,
+  height: 800
 }
 
 var margins =
 {
-  top:10,
+  top:100,
   bottom:100,
   left:100,
   right:200
@@ -135,6 +135,7 @@ var column = row.selectAll('rect')
           .data(columns)
           .enter()
           .append('rect')
+          .attr('class',"rect")
           .attr("x", function(d)
           {
             return xScale(d.x);
@@ -151,6 +152,10 @@ var column = row.selectAll('rect')
           {
           return 'grey'
           }
+          else if(matrix[d.x][d.y]> -.3&&matrix[d.x][d.y]< .3)
+          {
+            return 'yellow'
+          }
           else if(matrix[d.x][d.y]> -1&&matrix[d.x][d.y]< .6)
           {
           return 'green'
@@ -159,8 +164,8 @@ var column = row.selectAll('rect')
           {
           return 'blue'
           }
+        });
 
-          })
 
  var xA = margins.top+height+20;
  var xAxis = d3.axisBottom(xScale)
@@ -174,7 +179,7 @@ var column = row.selectAll('rect')
  var yA = margins.left-10;
  svg.append('g').classed('yAxis',true)
      .call(yAxis)
-     .attr('transform','translate('+yA+ ','+'10'+')' );
+     .attr('transform','translate('+yA+ ','+'100'+')' );
 //make axis labels
 // var yLabel =svg.append('text')
 //             .attr('transform','rotate(-90)')
@@ -186,4 +191,57 @@ var column = row.selectAll('rect')
 //             .text('Day');
 svg.select('div.students')
     .attr('y',height+30)
+var legend2 = svg.append('g')
+                      .classed('legend',true)
+                      .attr('transform','translate('+(width+margins.left)+','+margins.top+')');
+var legendLines = legend2.selectAll('g')
+                              .data([0,1,2,3])
+                              .enter()
+                              .append('g')
+                              .classed('legendLines',true)
+                              .attr('transform', function(d,i)
+                                  {
+                                  return "translate(0,"+(i*12)+")";
+                                          })
+                  legendLines.append('rect')
+                             .attr('x',0)
+                             .attr('y',function(d,i){return 10*i})
+                             .attr('width',12)
+                             .attr('height',12)
+                             .attr('fill',function(d,i)
+                             {
+                              if(i==0)
+                              {
+                                return "grey";
+                              }
+                              else if(i==1)
+                              {
+                                return "yellow";
+                              }
+                              else if(i==2)
+                              {return "green"}
+                              else if(i==3)
+                              {return "blue"}
+
+                            })
+                  legendLines.append('text')
+                            .attr("id", "legendText")
+                             .attr('x',15)
+                             .attr('y',function(d,i){return (10*i)+12})
+                             .text(function(d,i)
+                             {
+                              if(i==0)
+                              {
+                                return "No Correlation";
+                              }
+                              else if (i==1)
+                              {
+                                return "small";
+                              }
+                              else if(i==2)
+                              {return "medium"}
+                              else if(i==2)
+                              {return "large"}
+
+                            })
 }

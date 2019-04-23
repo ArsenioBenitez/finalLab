@@ -1,3 +1,26 @@
+
+@import url('https://fonts.googleapis.com/css?family=Oswald');
+
+
+body{
+  background-color: "#d8edf3";
+  font-family: 'Oswald', sans-serif;
+  font-size:15px;
+}
 rect{
-  border-style: 2px solid 'black';
+  border: 5px solid red;
+}
+div{
+  float:left;
+}
+p{
+  float:left;
+}
+h1{
+  position:fixed;
+  top:5px;
+  left:430px;
+  font-size:30px;
+
+
 }

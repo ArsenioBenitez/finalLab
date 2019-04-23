@@ -240,7 +240,7 @@ var legendLines = legend2.selectAll('g')
                               }
                               else if(i==2)
                               {return "medium"}
-                              else if(i==2)
+                              else if(i==3)
                               {return "large"}
 
                             })
